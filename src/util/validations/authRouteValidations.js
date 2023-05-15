@@ -1,5 +1,5 @@
-// import { body, validationResult } from "express-validator";
-const { body, validationResult } = require('express-validator');
+import { body, validationResult } from "express-validator";
+// const { body, validationResult } = require('express-validator');
 import createError from "../errors/createError.js";
 
 const auth = [
