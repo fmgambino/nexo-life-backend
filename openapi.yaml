@@ -1,0 +1,1322 @@
+openapi: 3.0.3
+info:
+  title: NEXOHouse
+  description: NEXOHouse documentation
+  version: 1.0.0
+servers:
+  - url: https://api.nexo-house.com/api/v1
+  - url: http://localhost:9000/api/v1
+tags:
+  - name: Auth
+    description: Auth routes
+  - name: Church
+    description: Church routes
+  - name: Consolidation
+    description: Consolidations routes
+  - name: Evangelization
+    description: Evangelization routes
+  # - name: Comment
+  #   description: Comment routes
+paths:
+  /auth:
+    post:
+      tags:
+        - Auth
+      summary: Auth user
+      description: Auth user.
+      operationId: authUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: pekrloloe@gmail.com
+                password:
+                  type: string
+                  example: "12345678"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/User"
+    get:
+      tags:
+        - Auth
+      summary: Geat All Users
+      security:
+        - bearerAuth: []
+      description: Geat All Users
+      operationId: getAllUsers
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Usersget"
+  /auth/responsibles:
+    get:
+      tags:
+        - Auth
+      summary: Geat All Responsibles users
+      security:
+        - bearerAuth: []
+      description: Geat All Responsibles users
+      operationId: getAllResponsiblesUsers
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsibleGet"                
+  /auth/create:
+    post:
+      tags:
+        - Auth
+      summary: Create user
+      security:
+        - bearerAuth: []
+      description: Create user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          $ref: "#/components/responses/ok"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        406:
+          $ref: "#/components/responses/DuplicateData"
+  /auth/{id}:
+    put:
+      tags:
+        - Auth
+      summary: Update user by id
+      security:
+        - bearerAuth: []
+      description: Update user by id
+      operationId: updateUserById
+      parameters:
+        - name: id
+          in: path
+          description: "The id that needs to be fetched"
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: User updated successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+    delete:
+      tags:
+        - Auth
+      summary: Delete user by id
+      security:
+        - bearerAuth: []
+      description: Delete user by id
+      operationId: deleteUserById
+      parameters:
+        - name: id
+          in: path
+          description: "The id that needs to be fetched"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User removed successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+  /consolidation:
+    post:
+      tags:
+        - Consolidation
+      summary: Create Consolidation
+      security:
+        - bearerAuth: []
+      description: Create Consolidation.
+      operationId: createConsolidation
+      requestBody:
+        description: Created consolidation object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsolidationAndEvangelizationPost"
+      responses:
+        200:
+          $ref: "#/components/responses/ok"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        406:
+          $ref: "#/components/responses/DuplicateData"
+    get:
+      tags:
+        - Consolidation
+      summary: Geat All Consolidation
+      security:
+        - bearerAuth: []
+      description: Geat All Consolidation
+      operationId: getAllConsolidation
+      parameters:
+        - name: date
+          in: query
+          description: Used to filter by months
+          required: false
+          explode: true
+          schema:
+            type: string
+            example: 2023-02
+        - name: page
+          in: query
+          description: Current page
+          required: false
+          explode: true
+          schema:
+            type: string
+            example: 1
+        - name: limit
+          in: query
+          description: How many elements are displayed per page
+          required: false
+          explode: true
+          schema:
+            type: string
+            example: 10
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsolidationAndEvangelization"
+  /consolidation/{id}:
+    get:
+      tags:
+        - Consolidation
+      summary: Get one consolidation by id
+      security:
+        - bearerAuth: []
+      description: Get one consolidation by id
+      operationId: getOneConsolidationByName
+      parameters:
+        - name: id
+          in: path
+          description: "The id that needs to be update"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsolidationGet"
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+    put:
+      tags:
+        - Consolidation
+      summary: Update consolidation by id
+      security:
+        - bearerAuth: []
+      description: Update consolidation by id
+      operationId: updateConsolidationByName
+      parameters:
+        - name: id
+          in: path
+          description: "The id that needs to be fetched"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      requestBody:
+        description: Update an existent consolidation in the store
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsolidationAndEvangelizationPost"
+      responses:
+        "200":
+          description: Consolidation updated successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+    delete:
+      tags:
+        - Consolidation
+      summary: Delete consolidation by id
+      security:
+        - bearerAuth: []
+      description: Delete consolidation by id
+      operationId: deleteConsolidationByName
+      parameters:
+        - name: id
+          in: path
+          description: "The id that needs to be fetched"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      responses:
+        "200":
+          description: Consolidation removed successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+  /consolidation/{id}/comment:
+    put:
+      tags:
+        - Consolidation
+      summary: Create a consolidation comment
+      security:
+        - bearerAuth: []
+      description: Create a consolidation comment
+      operationId: createCommentConsolidation
+      parameters:
+        - name: id
+          in: path
+          description: "The consolidation id"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      requestBody:
+        description: Create a consolidation comment
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+      responses:
+        "200":
+          description: Comment created successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+  /consolidation/{id}/comment/{commentId}:
+    put:
+      tags:
+        - Consolidation
+      summary: Remove a consolidation comment
+      security:
+        - bearerAuth: []
+      description: Remove a consolidation comment
+      operationId: removeCommentConsolidation
+      parameters:
+        - name: id
+          in: path
+          description: "The consolidation id"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+        - name: commentId
+          in: path
+          description: "The comment id"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      responses:
+        "200":
+          description: Comment removed successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+  /church:
+    post:
+      tags:
+        - Church
+      summary: Create Church
+      security:
+        - bearerAuth: []
+      description: Create Church
+      operationId: createChurch
+      requestBody:
+        description: Created church object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Church"
+      responses:
+        200:
+          $ref: "#/components/responses/ok"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        406:
+          $ref: "#/components/responses/DuplicateData"
+    get:
+      tags:
+        - Church
+      summary: Geat All Church
+      security:
+        - bearerAuth: []
+      description: Geat All Church
+      operationId: getAllChurch
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Church"
+  /church/{id}:
+    put:
+      tags:
+        - Church
+      summary: Update church by id
+      security:
+        - bearerAuth: []
+      description: Update church by id
+      operationId: updateChurchByName
+      parameters:
+        - name: id
+          in: path
+          description: "The id that needs to be fetched"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      requestBody:
+        description: Update an existent church in the store
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Church"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Church"
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+    delete:
+      tags:
+        - Church
+      summary: Delete church by id
+      security:
+        - bearerAuth: []
+      description: Delete church by id
+      operationId: deleteChurchByName
+      parameters:
+        - name: id
+          in: path
+          description: "The id that needs to be fetched"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      responses:
+        "200":
+          description: Church removed successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+  /evangelization:
+    post:
+      tags:
+        - Evangelization
+      summary: Create Evangelization
+      security:
+        - bearerAuth: []
+      description: Create Evangelization.
+      operationId: createEvangelization
+      requestBody:
+        description: Created evangelization object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsolidationAndEvangelizationPost"
+      responses:
+        200:
+          $ref: "#/components/responses/ok"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        406:
+          $ref: "#/components/responses/DuplicateData"
+    get:
+      tags:
+        - Evangelization
+      summary: Geat All Evangelizations
+      security:
+        - bearerAuth: []
+      description: Geat All Evangelizations
+      operationId: getAllEvangelizations
+      parameters:
+        - name: date
+          in: query
+          description: Used to filter by months
+          required: false
+          explode: true
+          schema:
+            type: string
+            example: 2023-02
+        - name: page
+          in: query
+          description: Current page
+          required: false
+          explode: true
+          schema:
+            type: string
+            example: 1
+        - name: limit
+          in: query
+          description: How many elements are displayed per page
+          required: false
+          explode: true
+          schema:
+            type: string
+            example: 10
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsolidationAndEvangelization"
+  /evangelization/{id}:
+    get:
+      tags:
+        - Evangelization
+      summary: Get one evangelization by id
+      security:
+        - bearerAuth: []
+      description: Get one evangelization by id
+      operationId: getOneEvangelizationByName
+      parameters:
+        - name: id
+          in: path
+          description: "The id that needs to be fetched"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvangelizationGet"
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+    put:
+      tags:
+        - Evangelization
+      summary: Update evangelization by id
+      security:
+        - bearerAuth: []
+      description: Update evangelization by id
+      operationId: updateEvangelizationByName
+      parameters:
+        - name: id
+          in: path
+          description: "The id that needs to be update"
+          required: true
+          schema:
+            type: string
+            example: 63e45db9c22e57efb4f6075d
+      requestBody:
+        description: Update an existent evangelization in the store
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsolidationAndEvangelizationPost"
+      responses:
+        "200":
+          description: Evangelization updated successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+    delete:
+      tags:
+        - Evangelization
+      summary: Delete evangelization by id
+      security:
+        - bearerAuth: []
+      description: Delete evangelization by id
+      operationId: deleteEvangelizationByName
+      parameters:
+        - name: id
+          in: path
+          description: "The id that needs to be delete"
+          required: true
+          schema:
+            type: string
+            example: 63e45db9c22e57efb4f6075d
+      responses:
+        "200":
+          description: Evangelization removed successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+  /evangelization/promote/{id}:
+    put:
+      tags:
+        - Evangelization
+      summary: Promote one evangelization to consolidation
+      security:
+        - bearerAuth: []
+      description: Promote one evangelization to consolidation
+      operationId: promoteOneEvangelizationToBeConsolidation
+      parameters:
+        - name: id
+          in: path
+          description: "The id that needs to be promote"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      responses:
+        "200":
+          description: Evangelization promote successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+  /evangelization/{id}/comment:
+    put:
+      tags:
+        - Evangelization
+      summary: Create a evangelization comment
+      security:
+        - bearerAuth: []
+      description: Create a evangelization comment
+      operationId: createCommentEvangelization
+      parameters:
+        - name: id
+          in: path
+          description: "The evangelization id"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      requestBody:
+        description: Create a evangelization comment
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+      responses:
+        "200":
+          description: Comment created successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+  /evangelization/{id}/comment/{commentId}:
+    put:
+      tags:
+        - Evangelization
+      summary: Remove a evangelization comment
+      security:
+        - bearerAuth: []
+      description: Remove a evangelization comment
+      operationId: removeCommentEvangelization
+      parameters:
+        - name: id
+          in: path
+          description: "The evangelization id"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+        - name: commentId
+          in: path
+          description: "The comment id"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      responses:
+        "200":
+          description: Comment removed successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+  /evangelization/{id}/updateWeek/{dateId}/{weekId}:
+    put:
+      tags:
+        - Evangelization
+      summary: Update a evangelization week
+      security:
+        - bearerAuth: []
+      description: Update a consolidation week
+      operationId: updateWeekConsolidation
+      parameters:
+        - name: id
+          in: path
+          description: "The evangelization id"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+        - name: dateId
+          in: path
+          description: "The date id"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+        - name: weekId
+          in: path
+          description: "The week id"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      requestBody:
+        description: Update a consolidation week
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Week"
+      responses:
+        "200":
+          description: Week removed successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"
+  /evangelization/promote/{id}:
+    put:
+      tags:
+        - Evangelization
+      summary: Promote evangelization to consolidation
+      security:
+        - bearerAuth: []
+      description: Promote evangelization to consolidation
+      operationId: promoteEvangelization
+      parameters:
+        - name: id
+          in: path
+          description: "The evangelization id"
+          required: true
+          schema:
+            type: string
+            example: 63ce20fb08833b0f940ba1cd
+      responses:
+        "200":
+          description: Evangelization promote successfully!
+        "400":
+          description: Invalid id supplied
+        "404":
+          $ref: "#/components/responses/IsNoRecord"  
+components:
+  schemas:
+    User:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+          example: Test
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: password
+        profile:
+          type: string
+          enum:
+            - DataEntry
+            - Administrator
+          default: DataEntry
+        church:
+          type: string
+          example: 63ccad4fac7871cc2f7b84cb
+        rol:
+          type: string
+          enum:
+            - SuperAdministrator
+            - Administrator
+            - Responsible
+          default: Responsible
+        address:
+          type: string
+          example: "Calle # 12"
+        phone:
+          type: string
+          example: "+5258493624"
+    ResponsibleGet:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: Andres
+              email:
+                type: string
+                example: andres@nexolife.com
+              profile:
+                type: string
+                enum:
+                  - DataEntry
+                  - Administrator
+                default: DataEntry
+              church:
+                type: string
+                example: 63ccad4fac7871cc2f7b84cb
+              rol:
+                type: string
+                enum:
+                  - SuperAdministrator
+                  - Administrator
+                  - Responsible
+                default: Responsible
+              status:
+                type: boolean
+                example: true
+              address:
+                type: string
+                example: "Calle # 12"
+              phone:
+                type: string
+                example: "+5258493624"      
+    Usersget:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                prev:
+                  example: 1 || false
+                page:
+                  example: 1
+                next:
+                  example: 2 || false
+                per_page:
+                  example: 10
+                total_pages:
+                  example: 3
+                per_page:
+                  total_docs: 30
+            info:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Andres
+                  email:
+                    type: string
+                    example: andres@nexolife.com
+                  profile:
+                    type: string
+                    enum:
+                      - DataEntry
+                      - Administrator
+                    default: DataEntry
+                  church:
+                    type: string
+                    example: 63ccad4fac7871cc2f7b84cb
+                  rol:
+                    type: string
+                    enum:
+                      - SuperAdministrator
+                      - Administrator
+                      - Responsible
+                    default: Responsible
+                  status:
+                    type: boolean
+                    example: true
+                  address:
+                    type: string
+                    example: "Calle # 12"
+                  phone:
+                    type: string
+                    example: "+5258493624"
+    Week:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum:
+            - AUCENSIA
+            - JUSTIFICADO
+            - ASISTE
+            - SIN_DATOS
+          default: SIN_DATOS
+    ConsolidationAndEvangelization:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                prev:
+                  example: 1 || false
+                page:
+                  example: 1
+                next:
+                  example: 2 || false
+                per_page:
+                  example: 10
+                total_pages:
+                  example: 3
+                per_page:
+                  total_docs: 30
+            info:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id: 
+                    example: 63e45dfdc22e57efb4f60762,
+                  name:
+                    type: string
+                    example: Alberto
+                  last_name:
+                    type: string
+                    example: Castillo Fonseca
+                  age:
+                    type: number
+                    example: 24
+                  family_status:
+                    type: string
+                    example: SOLTERO
+                    enum:
+                      - SOLTERO
+                      - CASADO
+                      - DIVORCIADO
+                      - VIUDO
+                      - CONCUBINATO
+                  address:
+                    type: string
+                    example: Calle Mora No. 27
+                  responsible:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 63f664c9b5c84f167b9d2a56
+                      name:
+                        type: string
+                        example: Pedro
+                      email:
+                        type: string
+                        example: manolo@gmail.com
+                      profile:
+                        type: string
+                        example: Administrator
+                      church:
+                        type: string
+                        example: 63ccad4fac7871cc2f7b84cb
+                      rol:
+                        type: string
+                        example: Responsible
+                      status:
+                        type: boolean
+                        example: true
+                      createdAt:
+                        type: string
+                        example: 2023-02-22T18:54:01.129Z
+                      updatedAt:
+                        type: string
+                        example: 2023-02-22T18:54:01.129Z  
+                  location:
+                    type: string
+                    example: Buenos Aires - Argentina
+                  phone:
+                    type: string
+                    example: +5358582342
+                  occupation:
+                    type: string
+                    example: Informático
+                  another_church:
+                    type: boolean
+                    default: false
+                    example: false
+                  to_be_visited:
+                    type: boolean
+                    default: false
+                    example: false
+                  destination:
+                    type: string
+                    default: EN_PROCESO
+                    example: EN_PROCESO
+                    enum:
+                      - CONSOLIDADO
+                      - EN_ORACIÓN
+                      - EN_PROCESO
+                      - OTRA_IGLESIA
+                      - VISITA
+                  invited_by:
+                    type: string
+                    example: Carlos Sanchez
+                  consolidator:
+                    type: string
+                    example: Carlos Sanchez 
+                  comments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        body: 
+                          example: Un comentario,
+                        created: 
+                          example: 2023-02-08T19:15:59.423Z,
+                        created_by: 
+                          example: 63cb64ef0f6fb3b3921d11da,
+                        _id: 
+                          example: 63e3f4ef7767a2a0675f788f, 
+                        status:
+                          type: string
+                          default: NO_INFORMO
+                          example: NO_INFORMO
+                          enum:
+                            - VISITADO
+                            - CONTACTO_TELEFONICO  
+                            - NO_INFORMO  
+                            - NO_CONSOLIDO  
+                            - NO_RECIBIO       
+    ConsolidationGet:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            _id: 
+              example: 63e45dfdc22e57efb4f60762,
+            name:
+              type: string
+              example: Alberto
+            last_name:
+              type: string
+              example: Castillo Fonseca
+            age:
+              type: number
+              example: 24
+            family_status:
+              type: string
+              example: SOLTERO
+              enum:
+                - SOLTERO
+                - CASADO
+                - DIVORCIADO
+                - VIUDO
+                - CONCUBINATO
+            address:
+              type: string
+              example: Calle Mora No. 27
+            responsible:
+              type: object
+              properties:
+                _id:
+                  type: string
+                  example: 63f664c9b5c84f167b9d2a56
+                name:
+                  type: string
+                  example: Pedro
+                email:
+                  type: string
+                  example: manolo@gmail.com
+                profile:
+                  type: string
+                  example: Administrator
+                church:
+                  type: string
+                  example: 63ccad4fac7871cc2f7b84cb
+                rol:
+                  type: string
+                  example: Responsible
+                status:
+                  type: boolean
+                  example: true
+                createdAt:
+                  type: string
+                  example: 2023-02-22T18:54:01.129Z
+                updatedAt:
+                  type: string
+                  example: 2023-02-22T18:54:01.129Z
+            location:
+              type: string
+              example: Buenos Aires - Argentina
+            phone:
+              type: string
+              example: +5358582342
+            occupation:
+              type: string
+              example: Informático
+            another_church:
+              type: boolean
+              default: false
+              example: false
+            to_be_visited:
+              type: boolean
+              default: false
+              example: false
+            destination:
+              type: string
+              default: EN_PROCESO
+              example: EN_PROCESO
+              enum:
+                - CONSOLIDADO
+                - EN_ORACIÓN
+                - EN_PROCESO
+                - OTRA_IGLESIA
+                - VISITA
+            invited_by:
+              type: string
+              example: Carlos Sanchez
+            consolidator:
+              type: string
+              example: Carlos Sanchez 
+            comments:
+              type: array
+              items:
+                type: object
+                properties:
+                  body: 
+                    example: Un comentario,
+                  created: 
+                    example: 2023-02-08T19:15:59.423Z,
+                  created_by: 
+                    example: 63cb64ef0f6fb3b3921d11da,
+                  _id: 
+                    example: 63e3f4ef7767a2a0675f788f, 
+                  status:
+                    type: string
+                    default: NO_INFORMO
+                    example: NO_INFORMO
+                    enum:
+                      - VISITADO
+                      - CONTACTO_TELEFONICO  
+                      - NO_INFORMO  
+                      - NO_CONSOLIDO  
+                      - NO_RECIBIO  
+    EvangelizationGet:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            _id: 
+              example: 63e45dfdc22e57efb4f60762
+            full_name: 
+              example: Deborah,
+            responsible: 
+            example: 
+              example: 63e45db9c22e57efb4f6075d
+            destination: 
+              example: CONSOLIDADO
+            invited_by: 
+              example: Carlos Sanchez
+            consolidator: 
+              example: Carlos Sanchez
+            weeks:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    example: 63e45db9c22e57efb4f6075d
+                  created: 
+                    example: 2023-02,
+                  created_by:
+                    example: 63e45db9c22e57efb4f6075d 
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:  
+                          status: 
+                            example: JUSTIFICADO
+                          name: 
+                            example: week_2
+                          _id: 
+                            example: 63e3f4ef7767a2a0675f788f 
+            comments:
+              type: array
+              items:
+                type: object
+                properties:
+                  body: 
+                    example: Un comentario
+                  created: 
+                    example: "2023-02-08T19:15:59.423Z"
+                  created_by: 
+                    example: 63cb64ef0f6fb3b3921d11da
+                  _id: 
+                    example: 63e3f4ef7767a2a0675f788f 
+    ConsolidationAndEvangelizationPost:
+      type: object
+      required: [name, last_name, address, location, phone, another_church, invited_by]
+      properties:
+        name:
+          type: string
+          example: Alberto
+        last_name:
+          type: string
+          example: Castillo Fonseca
+        age:
+          type: number
+          example: 24
+        family_status:
+          type: string
+          example: SOLTERO
+          enum:
+            - SOLTERO
+            - CASADO
+        address:
+          type: string
+          example: Calle Mora No. 27
+        responsible:
+          type: string
+          example: 0tY60128288gatTggfa526510
+        location:
+          type: string
+          example: Buenos Aires - Argentina
+        phone:
+          type: string
+          example: +5358582342
+        occupation:
+          type: string
+          example: Informático
+        another_church:
+          type: boolean
+          default: false
+          example: false
+        to_be_visited:
+          type: boolean
+          default: false
+          example: false
+        destination:
+          type: string
+          default: EN_PROCESO
+          example: EN_PROCESO
+          enum:
+            - CONSOLIDADO
+            - EN_ORACIÓN
+            - EN_PROCESO
+            - OTRA_IGLESIA
+            - VISITA
+        invited_by:
+          type: string
+          example: Carlos Sanchez
+        consolidator:
+          type: string
+          example: Carlos Sanchez
+    Church:
+      type: object
+      required: [name, address]
+      properties:
+        name:
+          type: string
+          example: Alfa y Omega
+        address:
+          type: string
+          example: Main 123 St
+    Comment:
+      type: object
+      required: [body]
+      properties:
+        body:
+          type: string
+          example: Este es un comentario
+        status:
+          type: string
+          default: NO_INFORMO
+          example: NO_INFORMO
+          enum:
+            - VISITADO
+            - CONTACTO_TELEFONICO  
+            - NO_INFORMO  
+            - NO_CONSOLIDO  
+            - NO_RECIBIO  
+  requestBodies:
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/User"
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    ok:
+      description: ok!
+    UnauthorizedError:
+      description: Not authorized!
+    DuplicateData:
+      description: Already a user with these data!
+    IsNoRecord:
+      description: There is no record with that id!
+    SuccessfullRemove:
+      description: Church removed successfully!
