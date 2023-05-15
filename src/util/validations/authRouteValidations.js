@@ -1,8 +1,9 @@
-import { check, validationResult } from "express-validator";
+// import { body, validationResult } from "express-validator";
+const { body, validationResult } = require('express-validator');
 import createError from "../errors/createError.js";
 
 const auth = [
-  check("email")
+  body("email")
     .trim()
     .not()
     .isEmpty()
@@ -11,7 +12,7 @@ const auth = [
     .isEmail()
     .withMessage("Invalid email address!")
     .bail(),
-  check("password")
+  body("password")
     .trim()
     .escape()
     .not()
@@ -31,7 +32,7 @@ const auth = [
 ];
 
 const create = [
-  check("name")
+  body("name")
     .trim()
     .escape()
     .not()
@@ -41,7 +42,7 @@ const create = [
     .isLength({ min: 3 })
     .withMessage("Name minimum 3 characters required!")
     .bail(),
-  check("email")
+  body("email")
     .trim()
     .not()
     .isEmpty()
@@ -49,7 +50,7 @@ const create = [
     .isEmail()
     .withMessage("Invalid email address!")
     .bail(),
-  check("password")
+  body("password")
     .trim()
     .escape()
     .not()
@@ -69,7 +70,7 @@ const create = [
 ];
 
 const update = [
-  check("name")
+  body("name")
     .trim()
     .escape()
     .not()
