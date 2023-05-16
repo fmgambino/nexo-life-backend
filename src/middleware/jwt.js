@@ -3,11 +3,12 @@ import createError from "../util/errors/createError.js";
 
 const isAuthenticated = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  // console.log(authHeader);
+  // const token = authHeader && authHeader.split(" ")[1];
 
-  //console.log(authHeader);
+  console.log(authHeader);
 
-  if (token == null) return next(createError(401, "Not authorized!"));
+  if (authHeader == null) return next(createError(401, "Not authorized!"));
 
   jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, token) => {
     //console.log(err);

@@ -9,13 +9,13 @@ const authUser = async (req, res, next) => {
     .findOne({ email })
     .select("+password")
     .then(async (user) => {
-      if (user === null) return next(createError(404, "Invalid credentials!"));
+      if (user === null) return next(createError(404, "User not found"));
 
       if (!(await user?.isPasswordMatch(password)))
-        return next(createError(404, "Invalid credentials!"));
+        return next(createError(401, "Incorrect password"));
 
-      const { password: deletePassword, ...otherData } = user?._doc;
-      // console.log(otherData);
+      const { password: deletePassword, __v, ...otherData } = user?._doc;
+
       const token = generateJwt.generateAccessToken(
         otherData?._id,
         otherData?.rol,
@@ -29,6 +29,7 @@ const authUser = async (req, res, next) => {
       });
     })
     .catch((err) => {
+      console.log(`ERROR: ${err}`);
       return next(createError(406, err));
     });
 };

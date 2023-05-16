@@ -4,6 +4,7 @@ import userModel from "./src/models/userModel.js";
 import churchModel from "./src/models/churchModel.js";
 
 mongoose.set("strictQuery", false);
+mongoose.set('bufferTimeoutMS', 60000);
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
