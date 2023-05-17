@@ -1,15 +1,26 @@
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
+
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
 const app = express();
 import dbConnect from "./config/dbConnect.js";
 
-import swaggerDocs from "./routes/swagger.js";
+// import swaggerDocs from "./routes/swagger.js";
 import authRoutesV1 from "./routes/v1/authRoutes.js";
 import churchRoutesV1 from "./routes/v1/churchRoutes.js";
 import consolidationRoutesV1 from "./routes/v1/consolidationRoutes.js";
 import evangelizationRoutesV1 from "./routes/v1/evangelizeRoutes.js";
 import commentRoutesV1 from "./routes/v1/commentRoutes.js";
+
+
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 dbConnect();
 
@@ -19,11 +30,7 @@ app.use(cors());
 
 const PORT = process.env.PORT || 9000;
 
-// app.get("/", (req, res) => {
-//   res.status(200).send({
-//     message: `Hello server running!`,
-//   });
-// });
+
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -52,7 +59,47 @@ app.use((err, req, res, next) => {
   });
 });
 
+
+// Configuración de Swagger
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Nexo life Express API with Swagger",
+      version: "1.0.0",
+      description:
+        "This is a API made with Express and documented with Swagger",
+      license: {
+        name: "MIT",
+        url: "https://spdx.org/licenses/MIT.html",
+      },
+
+    },
+    servers: [
+      {
+        url: "http://localhost:9000/api/v1",
+      },
+    ],
+  },
+  apis: [`${__dirname}/routes/v1/authRoutes.js`],
+};
+
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+
+const swaggerDocs = (app, port) => {
+  // Ruta para acceder a la documentación de Swagger
+  app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.get('/api/v1/docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+  });
+  console.log(`Version 1 Docs are available on http://localhost:${port}/api/v1/docs`);
+}
+
+
+
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
-  swaggerDocs.swaggerDocs(app, PORT);
+  // swaggerDocs.swaggerDocs(app, PORT);
+  swaggerDocs(app,  PORT);
 });
