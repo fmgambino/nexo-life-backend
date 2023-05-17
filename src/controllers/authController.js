@@ -111,7 +111,9 @@ const getAll = async (req, res, next) => {
   const skip = (page - 1) * limit;
 
   let selectRol =
-    rol === "SuperAdministrator" ? "Administrator" : "Responsible";
+  rol !== null && rol === "SuperAdministrator" ? "Administrator" : "Responsible";
+
+  console.log(`selectRol: ${selectRol}`);
 
   if (rol === "SuperAdministrator") {
     const userCount = await userModel
@@ -121,7 +123,7 @@ const getAll = async (req, res, next) => {
       .count({});
 
     if (skip >= userCount) {
-      res.status(200).send({
+      return res.status(200).send({
         status: false,
         data: {
           pagination: {
@@ -175,6 +177,7 @@ const getAll = async (req, res, next) => {
         return next(createError(404, err));
       });
   } else {
+
     const userCount = await userModel
       .find({
         rol: selectRol,
@@ -183,7 +186,7 @@ const getAll = async (req, res, next) => {
       .count({});
 
     if (skip >= userCount) {
-      res.status(200).send({
+      return res.status(200).send({
         status: false,
         data: {},
         message: "This page does not exist!",

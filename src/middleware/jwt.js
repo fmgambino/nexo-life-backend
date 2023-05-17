@@ -10,7 +10,7 @@ const isAuthenticated = (req, res, next) => {
 
   if (authHeader == null) return next(createError(401, "Not authorized!"));
 
-  jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, token) => {
+  jwt.verify(authHeader, process.env.JWT_ACCESS_SECRET, (err, token) => {
     //console.log(err);
 
     if (err) return next(createError(401, "Not authorized!"));

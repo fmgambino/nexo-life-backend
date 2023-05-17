@@ -88,11 +88,11 @@ import authValidations from "../../util/validations/authRouteValidations.js";
  *       500:
  *         description: Server error.
  */
-
-  router.post("/", authValidations.auth, authController.authUser);
+ router.post("/", authValidations.auth, authController.authUser);
   
-  router.get("/", authMiddleware.isAuthenticated, authController.getAll);
-  router.get(
+ router.get("/", authMiddleware.isAuthenticated, authController.getAll);
+  
+router.get(
     "/responsibles",
     authMiddleware.isAuthenticated,
     authMiddleware.checkRole(["Administrator"]),
