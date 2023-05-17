@@ -113,7 +113,7 @@ const getAll = async (req, res, next) => {
   let selectRol =
   rol !== null && rol === "SuperAdministrator" ? "Administrator" : "Responsible";
 
-  console.log(`selectRol: ${selectRol}`);
+  
 
   if (rol === "SuperAdministrator") {
     const userCount = await userModel
@@ -121,7 +121,7 @@ const getAll = async (req, res, next) => {
         rol: selectRol,
       })
       .count({});
-
+      console.log(`rol: ${rol} church: ${church} selectRol: ${selectRol} skip: ${skip} userCount: ${userCount}`);
     if (skip >= userCount) {
       return res.status(200).send({
         status: false,
