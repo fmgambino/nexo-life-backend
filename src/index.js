@@ -1,5 +1,6 @@
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
+import YAML from 'yamljs';
 
 import "dotenv/config";
 import express from "express";
@@ -7,7 +8,6 @@ import cors from "cors";
 const app = express();
 import dbConnect from "./config/dbConnect.js";
 
-// import swaggerDocs from "./routes/swagger.js";
 import authRoutesV1 from "./routes/v1/authRoutes.js";
 import churchRoutesV1 from "./routes/v1/churchRoutes.js";
 import consolidationRoutesV1 from "./routes/v1/consolidationRoutes.js";
@@ -20,7 +20,8 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
+const openApiPath = 'X:/electronica-gambino/nexo-life-backend/openapi.yaml';
+const openApiDoc = YAML.load(openApiPath);
 
 dbConnect();
 
@@ -54,33 +55,13 @@ app.use((err, req, res, next) => {
   const errorMessage = err.message || "Algo salió mal!";
   return res.status(errorStatus).json({
     status: false,
-    //status: errorStatus,
     message: errorMessage,
   });
 });
 
-
-// Configuración de Swagger
 const swaggerOptions = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Nexo life Express API with Swagger",
-      version: "1.0.0",
-      description:
-        "This is a API made with Express and documented with Swagger",
-      license: {
-        name: "MIT",
-        url: "https://spdx.org/licenses/MIT.html",
-      },
+  definition: openApiDoc,
 
-    },
-    servers: [
-      {
-        url: "http://localhost:9000/api/v1",
-      },
-    ],
-  },
   apis: [`${__dirname}/routes/v1/authRoutes.js`],
 };
 

@@ -11,18 +11,19 @@
 ```
 yarn install o yarn
 ```
+3. Clonar el archivo ```.env.template``` y renombrarlo a ```.env```
 
-3. levantar la base de datos
+4. levantar la base de datos
 ```
 docker-compose up -d
 ```
 
-4. levantar servidor
+5. levantar servidor
 ```
 yarn dev
 ```
 
-5. Reconstruir la base de datos con la semilla
+6. Reconstruir la base de datos con la semilla
 ```
 node seed.js
 ```
