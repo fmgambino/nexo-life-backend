@@ -35,8 +35,8 @@ const requestPasswordChange = async (req, res, next) => {
     const emailTemplate = `
     <html>
     <body>
-      <h1>¡Hola!</h1>
-      <p>Esto es un ejemplo de correo electrónico con plantilla HTML enviado desde Node.js.</p>
+      <h1>Hi!</h1>
+      <p>To change your password click on the following link</p>
     </body>
     </html>
     `;
@@ -44,8 +44,8 @@ const requestPasswordChange = async (req, res, next) => {
     // Define email
     const mailOptions = {
       from: 'soporte@nexolife.com',
-      to: 'chiuchiolo30@gmail.com',
-      subject: 'Ejemplo de correo electrónico con plantilla HTML',
+      to: email,
+      subject: 'Nexo life - password change request',
       html: emailTemplate,
     };
 
