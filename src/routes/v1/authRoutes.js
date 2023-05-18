@@ -15,7 +15,7 @@ import authValidations from "../../util/validations/authRouteValidations.js";
  *   put:
  *     summary: Update user password
  *     description: Updates a user's password based on their email address.
- *     tags: [AuthUser]
+ *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -75,7 +75,7 @@ router.put("/update-password",  authController.updatePassword);
  * /auth:
  *   post:
  *     summary: User authentication
- *     tags: [AuthUser]
+ *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -179,7 +179,7 @@ router.put("/update-password",  authController.updatePassword);
  * /auth/request-password-change:
  *   post:
  *     summary: Request password change
- *     tags: [AuthUser]
+ *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
