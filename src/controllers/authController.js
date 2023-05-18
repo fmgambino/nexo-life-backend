@@ -20,18 +20,15 @@ const requestPasswordChange = async (req, res, next) => {
       return next(createError(404, `User with email ${ email } not found`));
     }
 
-    // enviar email con los datos del usuario
-    // Configuring the SMTP transport
     const transporter = nodemailer.createTransport({
-        host: 'smtp-relay.sendinblue.com',
-        port: 587,
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
         auth: {
-          user: 'soporte@nexolife.com',
-          pass: 'xsmtpsib-3fefc7bbc2e4d87bec1034c587a2bd96df1f2dd4d28020e2285a1be0a75431fe-fbY75QXBUCVpqcMa',
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASSWORD,
         },
     });
 
-    // Define the email HTML template
     const emailTemplate = `
     <html>
     <body>
@@ -41,15 +38,13 @@ const requestPasswordChange = async (req, res, next) => {
     </html>
     `;
 
-    // Define email
     const mailOptions = {
-      from: 'soporte@nexolife.com',
-      to: email,
+      from: process.env.SMTP_USER,
+      to: 'chiuchiolo30@gmail.com',
       subject: 'Nexo life - password change request',
       html: emailTemplate,
     };
 
-    // Send the email
     transporter.sendMail(mailOptions, (error, info) => {
       if (!error) {
         return res.status(200).send({
