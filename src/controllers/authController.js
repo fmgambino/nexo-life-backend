@@ -2,6 +2,71 @@ import userModel from "../models/userModel.js";
 import createError from "./../util/errors/createError.js";
 import generateJwt from "./../util/generators/generateJwt.js";
 
+import nodemailer  from 'nodemailer';
+
+
+const requestPasswordChange = async (req, res, next) => {
+
+  const { email } = req.body;
+
+  if (!email) {
+    return next(createError(422, `Email name can not be empty!`));
+  }
+
+  try {
+    const usuario = await userModel.findOne({ email });
+
+    if (!usuario) {
+      return next(createError(404, `User with email ${ email } not found`));
+    }
+
+    // enviar email con los datos del usuario
+    // Configuring the SMTP transport
+    const transporter = nodemailer.createTransport({
+        host: 'smtp-relay.sendinblue.com',
+        port: 587,
+        auth: {
+          user: 'soporte@nexolife.com',
+          pass: 'xsmtpsib-3fefc7bbc2e4d87bec1034c587a2bd96df1f2dd4d28020e2285a1be0a75431fe-fbY75QXBUCVpqcMa',
+        },
+    });
+
+    // Define the email HTML template
+    const emailTemplate = `
+    <html>
+    <body>
+      <h1>¡Hola!</h1>
+      <p>Esto es un ejemplo de correo electrónico con plantilla HTML enviado desde Node.js.</p>
+    </body>
+    </html>
+    `;
+
+    // Define email
+    const mailOptions = {
+      from: 'soporte@nexolife.com',
+      to: 'chiuchiolo30@gmail.com',
+      subject: 'Ejemplo de correo electrónico con plantilla HTML',
+      html: emailTemplate,
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (!error) {
+        return res.status(200).send({
+          success: true,
+          message: 'An email with password reset instructions has been sent.',
+        });
+      }
+      return next(createError(500, `Password reset email could not be sent.`));
+    });
+
+  } catch (error) {
+    return next(createError(500, `Server error`));
+  }
+
+}
+
+
 const authUser = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -460,4 +525,5 @@ export default {
   getAllResponsibles,
   update,
   remove,
+  requestPasswordChange
 };

@@ -74,6 +74,28 @@ import authValidations from "../../util/validations/authRouteValidations.js";
  *                   type: boolean
  *                 message:
  *                   type: string
+ *       422:
+ *         description: Invalid input data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: boolean
+ *                 message:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       value:
+ *                         type: string
+ *                       msg:
+ *                         type: string
+ *                       param:
+ *                         type: string
+ *                       location:
+ *                         type: string
  *       404:
  *         description: User not found.
  *         content:
@@ -89,6 +111,64 @@ import authValidations from "../../util/validations/authRouteValidations.js";
  *         description: Server error.
  */
  router.post("/", authValidations.auth, authController.authUser);
+
+
+ /**
+ * @swagger
+ * /auth/request-password-change:
+ *   post:
+ *     summary: Request password change
+ *     tags: [AuthUser]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: An email has been sent with password reset instructions.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: No user was found with the provided email address.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       422:
+ *         description: The email field cannot be empty.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: An error occurred while sending the email.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ */
+ router.post("/request-password-change", authController.requestPasswordChange);
   
  router.get("/", authMiddleware.isAuthenticated, authController.getAll);
   
