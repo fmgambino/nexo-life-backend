@@ -1,9 +1,38 @@
+import bcrypt from "bcrypt";
+
 import userModel from "../models/userModel.js";
 import createError from "./../util/errors/createError.js";
 import generateJwt from "./../util/generators/generateJwt.js";
 
 import nodemailer  from 'nodemailer';
 
+const updatePassword = async (req, res, next) => {
+
+  const { email, newPassword } = req.body;
+
+  try {
+    if (!email || !newPassword) {
+      return next(createError(422, 'Missing required fields.'));
+    }
+    const usuario = await userModel.findOne({ email });
+
+    if (!usuario) {
+      return next(createError(404, `The user with email ${email} does not exist`));
+    }
+    
+    usuario.password = newPassword;
+    await usuario.save();
+
+    return res.status(200).send({
+      success: true,
+      message: 'Password updated successfully.',
+    });
+
+  } catch (error) {
+    console.log(`ERROR ${error}`);
+    return next(createError(500, 'Server error.'));
+  }
+}
 
 const requestPasswordChange = async (req, res, next) => {
 
@@ -520,5 +549,6 @@ export default {
   getAllResponsibles,
   update,
   remove,
-  requestPasswordChange
+  requestPasswordChange,
+  updatePassword,
 };

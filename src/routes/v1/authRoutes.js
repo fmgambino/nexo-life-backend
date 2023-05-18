@@ -11,9 +11,70 @@ import authValidations from "../../util/validations/authRouteValidations.js";
 
 /**
  * @swagger
+ * /update-password:
+ *   put:
+ *     summary: Update user password
+ *     description: Updates a user's password based on their email address.
+ *     tags: [AuthUser]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       422:
+ *         description: Missing required fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ */
+router.put("/update-password",  authController.updatePassword);
+
+
+/**
+ * @swagger
  * /auth:
  *   post:
- *     summary: user authentication
+ *     summary: User authentication
  *     tags: [AuthUser]
  *     requestBody:
  *       required: true
