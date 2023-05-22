@@ -387,6 +387,24 @@ const getAllResponsibles = async (req, res, next) => {
     });
 };
 
+const getUserById = async (req, res, next) => {
+  let { id } = req.user;
+  try {
+    const usuario = await userModel.findOne({ _id: id });
+
+
+    if (!usuario) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).send(usuario);
+
+  } catch (error) {
+    return next(createError(406, err));
+  }
+};
+
+
 const update = async (req, res, next) => {
   const { id } = req.params;
   // const { name, password, profile, rol, address, phone } = req.body;
@@ -620,5 +638,6 @@ export default {
   update,
   remove,
   requestPasswordChange,
+  getUserById,
   updatePassword,
 };

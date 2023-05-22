@@ -12,7 +12,7 @@ import authValidations from "../../util/validations/authRouteValidations.js";
 
 /**
  * @swagger
- * /update-password:
+ * /auth/update-password:
  *   put:
  *     summary: Update user password
  *     description: Updates a user's password based on their email address.
@@ -253,6 +253,39 @@ router.get(
     authMiddleware.isAuthenticated,
     authController.update
   );
-  router.delete("/:id", authMiddleware.isAuthenticated, authController.remove);
+
+
+
+ /**
+ * @swagger
+ * /auth/get-user:
+ *   get:
+ *     summary: Get user information
+ *     description: Retrieves information of a user.
+ *     tags:
+ *       - Auth
+ *     responses:
+ *       200:
+ *         description: User information retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       406:
+ *         description: Request error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+ router.get("/get-user", authMiddleware.isAuthenticated, authController.getUserById);
+
+ router.delete("/:id", authMiddleware.isAuthenticated, authController.remove);
 
 export default router;
