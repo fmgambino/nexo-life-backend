@@ -388,7 +388,7 @@ const getAllResponsibles = async (req, res, next) => {
 };
 
 const getUserById = async (req, res, next) => {
-  let { id } = req.user;
+  const { id } = req.params;
   try {
     const usuario = await userModel.findOne({ _id: id });
 
@@ -400,7 +400,7 @@ const getUserById = async (req, res, next) => {
     res.status(200).send(usuario);
 
   } catch (error) {
-    return next(createError(406, err));
+    return next(createError(406, error));
   }
 };
 

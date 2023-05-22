@@ -246,11 +246,15 @@ router.get(
     authMiddleware.isAuthenticated,
     authController.authCreateUser
   );
+
+
   router.put(
     "/:id",
-    check('id', 'Not a valid ID').isMongoId(),
-    authValidations.update,
-    authMiddleware.isAuthenticated,
+    [
+      check('id', 'Not a valid ID').isMongoId(),
+      authValidations.update,
+      authMiddleware.isAuthenticated
+  ],
     authController.update
   );
 
@@ -258,12 +262,11 @@ router.get(
 
  /**
  * @swagger
- * /auth/get-user:
+ * /auth/{id}:
  *   get:
  *     summary: Get user information
  *     description: Retrieves information of a user.
- *     tags:
- *       - Auth
+ *     tags: [Auth]
  *     responses:
  *       200:
  *         description: User information retrieved successfully.
@@ -284,7 +287,14 @@ router.get(
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
- router.get("/get-user", authMiddleware.isAuthenticated, authController.getUserById);
+ router.get(
+    "/:id", 
+    [
+      check('id').isMongoId().withMessage('Not a valid ID'),
+      authMiddleware.isAuthenticated
+  ],
+    authController.getUserById
+  );
 
  router.delete("/:id", authMiddleware.isAuthenticated, authController.remove);
 
