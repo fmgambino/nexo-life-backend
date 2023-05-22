@@ -389,141 +389,175 @@ const getAllResponsibles = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   const { id } = req.params;
-  const { name, password, profile, rol, address, phone } = req.body;
+  // const { name, password, profile, rol, address, phone } = req.body;
+  const {rol, ... all } = req.body;
   let { rol: role } = req.user;
 
-  await userModel
-    .findById(id)
-    .then(async (updateUser) => {
-      if (role === "SuperAdministrator" && updateUser.rol === "Administrator") {
-        if (password !== undefined) {
-          await userModel
-            .findByIdAndUpdate(id, {
-              name,
-              password,
-              profile,
-              rol,
-              address,
-              phone,
-            })
-            .then(() => {
-              res.status(200).send({
-                status: true,
-                data: "User updated successfully!",
-              });
-            })
-            .catch((err) => {
-              console.log(err);
-              if (err.code === 11000)
-                return next(
-                  createError(406, "Already a user with these data!")
-                );
-              if (err.kind === "ObjectId")
-                return next(
-                  createError(404, "There is no record with that id!")
-                );
-              return next(createError(406, err));
-            });
-        } else {
-          await userModel
-            .findByIdAndUpdate(id, {
-              name,
-              profile,
-              rol,
-              address,
-              phone,
-            })
-            .then(() => {
-              res.status(200).send({
-                status: true,
-                data: "User updated successfully!",
-              });
-            })
-            .catch((err) => {
-              console.log(err);
-              if (err.code === 11000)
-                return next(
-                  createError(406, "Already a user with these data!")
-                );
-              if (err.kind === "ObjectId")
-                return next(
-                  createError(404, "There is no record with that id!")
-                );
-              return next(createError(406, err));
-            });
-        }
-      } else if (role === "Administrator" && updateUser.rol === "Responsible") {
-        if (password !== undefined) {
-          await userModel
-            .findByIdAndUpdate(id, {
-              name,
-              password,
-              profile,
-              rol,
-              address,
-              phone,
-            })
-            .then(() => {
-              res.status(200).send({
-                status: true,
-                data: "User updated successfully!",
-              });
-            })
-            .catch((err) => {
-              console.log(err);
-              if (err.code === 11000)
-                return next(
-                  createError(406, "Already a user with these data!")
-                );
-              if (err.kind === "ObjectId")
-                return next(
-                  createError(404, "There is no record with that id!")
-                );
-              return next(createError(406, err));
-            });
-        } else {
-          await userModel
-            .findByIdAndUpdate(id, {
-              name,
-              profile,
-              rol,
-              address,
-              phone,
-            })
-            .then(() => {
-              res.status(200).send({
-                status: true,
-                data: "User updated successfully!",
-              });
-            })
-            .catch((err) => {
-              console.log(err);
-              if (err.code === 11000)
-                return next(
-                  createError(406, "Already a user with these data!")
-                );
-              if (err.kind === "ObjectId")
-                return next(
-                  createError(404, "There is no record with that id!")
-                );
-              return next(createError(406, err));
-            });
-        }
-      } else {
-        return next(
-          createError(
-            401,
-            "You do not have permissions to delete this type of users!"
-          )
-        );
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      if (err.kind === "ObjectId")
-        return next(createError(404, "There is no record with that id!"));
-      return next(createError(406, err));
-    });
+
+  if(!["SuperAdministrator","Administrator"].includes(role) && !["Administrator","Responsible"].includes(rol)) {
+    return next(
+      createError(
+        401,
+        "You do not have permissions to delete this type of users!"
+      )
+    );
+  }
+
+
+  try {
+    const usuario = await userModel.findByIdAndUpdate(id, {rol, ... all});
+
+    if (usuario) {
+      res.status(200).send({
+        status: true,
+        data: "User updated successfully!",
+      });
+    } else {
+      return next(createError(404, "There is no record with that id!"));
+    }
+  } catch (err) {
+    console.log(err);
+    if (err.code === 11000) {
+      return next(createError(406, "Already a user with these data!"));
+    }
+    if (err.kind === "ObjectId") {
+      return next(createError(404, "There is no record with that id!"));
+    }
+    return next(createError(406, err));
+  }
+
+  // await userModel
+  //   .findById(id)
+  //   .then(async (updateUser) => {
+  //     if (role === "SuperAdministrator" && updateUser.rol === "Administrator") {
+  //       if (password !== undefined) {
+  //         await userModel
+  //           .findByIdAndUpdate(id, {
+  //             name,
+  //             password,
+  //             profile,
+  //             rol,
+  //             address,
+  //             phone,
+  //           })
+  //           .then(() => {
+  //             res.status(200).send({
+  //               status: true,
+  //               data: "User updated successfully!",
+  //             });
+  //           })
+  //           .catch((err) => {
+  //             console.log(err);
+  //             if (err.code === 11000)
+  //               return next(
+  //                 createError(406, "Already a user with these data!")
+  //               );
+  //             if (err.kind === "ObjectId")
+  //               return next(
+  //                 createError(404, "There is no record with that id!")
+  //               );
+  //             return next(createError(406, err));
+  //           });
+  //       } else {
+  //         await userModel
+  //           .findByIdAndUpdate(id, {
+  //             name,
+  //             profile,
+  //             rol,
+  //             address,
+  //             phone,
+  //           })
+  //           .then(() => {
+  //             res.status(200).send({
+  //               status: true,
+  //               data: "User updated successfully!",
+  //             });
+  //           })
+  //           .catch((err) => {
+  //             console.log(err);
+  //             if (err.code === 11000)
+  //               return next(
+  //                 createError(406, "Already a user with these data!")
+  //               );
+  //             if (err.kind === "ObjectId")
+  //               return next(
+  //                 createError(404, "There is no record with that id!")
+  //               );
+  //             return next(createError(406, err));
+  //           });
+  //       }
+  //     } else if (role === "Administrator" && updateUser.rol === "Responsible") {
+  //       if (password !== undefined) {
+  //         await userModel
+  //           .findByIdAndUpdate(id, {
+  //             name,
+  //             password,
+  //             profile,
+  //             rol,
+  //             address,
+  //             phone,
+  //           })
+  //           .then(() => {
+  //             res.status(200).send({
+  //               status: true,
+  //               data: "User updated successfully!",
+  //             });
+  //           })
+  //           .catch((err) => {
+  //             console.log(err);
+  //             if (err.code === 11000)
+  //               return next(
+  //                 createError(406, "Already a user with these data!")
+  //               );
+  //             if (err.kind === "ObjectId")
+  //               return next(
+  //                 createError(404, "There is no record with that id!")
+  //               );
+  //             return next(createError(406, err));
+  //           });
+  //       } else {
+  //         await userModel
+  //           .findByIdAndUpdate(id, {
+  //             name,
+  //             profile,
+  //             rol,
+  //             address,
+  //             phone,
+  //           })
+  //           .then(() => {
+  //             res.status(200).send({
+  //               status: true,
+  //               data: "User updated successfully!",
+  //             });
+  //           })
+  //           .catch((err) => {
+  //             console.log(err);
+  //             if (err.code === 11000)
+  //               return next(
+  //                 createError(406, "Already a user with these data!")
+  //               );
+  //             if (err.kind === "ObjectId")
+  //               return next(
+  //                 createError(404, "There is no record with that id!")
+  //               );
+  //             return next(createError(406, err));
+  //           });
+  //       }
+  //     } else {
+  //       return next(
+  //         createError(
+  //           401,
+  //           "You do not have permissions to delete this type of users!"
+  //         )
+  //       );
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //     if (err.kind === "ObjectId")
+  //       return next(createError(404, "There is no record with that id!"));
+  //     return next(createError(406, err));
+  //   });
 };
 
 const remove = async (req, res, next) => {

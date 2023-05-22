@@ -1,6 +1,7 @@
 
 
 import { Router } from "express";
+import { check } from'express-validator';
 
 
 const router = Router();
@@ -247,6 +248,7 @@ router.get(
   );
   router.put(
     "/:id",
+    check('id', 'Not a valid ID').isMongoId(),
     authValidations.update,
     authMiddleware.isAuthenticated,
     authController.update
