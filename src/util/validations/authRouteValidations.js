@@ -47,13 +47,17 @@ const create = [
     .withMessage("Name minimum 3 characters required!")
     .bail(),
   body("email")
-    .trim()
-    .not()
-    .isEmpty()
-    .withMessage("Email name can not be empty!")
+    .if((value, { req }) => req.body.email)
     .isEmail()
-    .withMessage("Invalid email address!")
-    .bail(),
+    .withMessage("Invalid email!")
+    .bail()
+    .custom((value, { req }) => {
+      return User.findOne({ email: value }).then((user) => {
+        if (user) {
+          return Promise.reject("Email already exists!");
+        }
+      });
+    }),
   body("password")
     .trim()
     .escape()
