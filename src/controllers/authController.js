@@ -394,13 +394,13 @@ const getUserById = async (req, res, next) => {
 
 
     if (!usuario) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ status: false, message: 'User not found' });
     }
 
     res.status(200).send(usuario);
 
   } catch (error) {
-    return next(createError(406, error));
+    return next(createError(406,  'Not a valid ID!' ));
   }
 };
 
