@@ -13,6 +13,8 @@ import churchRoutesV1 from "./routes/v1/churchRoutes.js";
 import consolidationRoutesV1 from "./routes/v1/consolidationRoutes.js";
 import evangelizationRoutesV1 from "./routes/v1/evangelizeRoutes.js";
 import commentRoutesV1 from "./routes/v1/commentRoutes.js";
+import destinationRoutesV1 from "./routes/v1/destinationRoutes.js";
+import commentStatusRoutesV1 from "./routes/v1/commentStatusRoutes.js";
 
 
 import { fileURLToPath } from 'url';
@@ -47,6 +49,8 @@ app.use("/api/v1/auth", authRoutesV1);
 app.use("/api/v1/church", churchRoutesV1);
 app.use("/api/v1/consolidation", consolidationRoutesV1);
 app.use("/api/v1/consolidation", consolidationRoutesV1);
+app.use("/api/v1/destination", destinationRoutesV1);
+app.use("/api/v1/comment-status", commentStatusRoutesV1);
 app.use("/api/v1/evangelization", evangelizationRoutesV1);
 app.use("/api/v1/comment", commentRoutesV1);
 

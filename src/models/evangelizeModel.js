@@ -83,10 +83,12 @@ const evangelizeSchema = new Schema(
       required: true,
       trim: true,
     },
-    comments: {
+    comments: [
+      {
         type: Schema.Types.ObjectId,
         ref: "Comment",
-      },
+      }
+    ],
     
   },
   {

@@ -10,6 +10,10 @@ const CommentSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  evangelized: {
+    type: Schema.Types.ObjectId,
+    ref: "Evangelize",
+  },
   status: {
     type: String,
     enum: [
