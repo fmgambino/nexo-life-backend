@@ -5,12 +5,12 @@ const evangelizeSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, 'Name is required'],
       trim: true,
     },
     last_name: {
       type: String,
-      required: true,
+      required: [true, 'Last name is required'],
       trim: true,
     },
     age: {
@@ -25,17 +25,17 @@ const evangelizeSchema = new Schema(
     },
     address: {
       type: String,
-      required: true,
+      required: [true, 'Address is required'],   
       trim: true,
     },
     location: {
       type: String,
-      required: true,
+      required: [true, 'Locality is required'],
       trim: true,
     },
     phone: {
       type: String,
-      required: true,
+      required: [true, 'Phone is required'],
       trim: true,
     },
     occupation: {
@@ -45,17 +45,17 @@ const evangelizeSchema = new Schema(
     another_church: {
       type: Boolean,
       default: false,
-      required: true,
+      required: [true, 'Field is required'],
     },
     to_be_visited: {
       type: Boolean,
       default: true,
-      required: true,
+      required: [true, 'Field is required'],
     },
     responsible: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: [true, 'Responsible is required'],
       trim: true,
     },
     church: {
@@ -83,62 +83,19 @@ const evangelizeSchema = new Schema(
       required: true,
       trim: true,
     },
-    comments: [
-      {
-        body: String,
-        created: Date,
-        created_by: Schema.Types.ObjectId,
-        status: {
-          type: String,
-          enum: [
-            "VISITADO",
-            "CONTACTO_TELEFONICO",
-            "NO_INFORMO",
-            "NO_CONSOLIDO",
-            "NO_RECIBIO",
-          ],
-          default: "NO_INFORMÓ",
-        },
+    comments: {
+        type: Schema.Types.ObjectId,
+        ref: "Comment",
       },
-    ],
-    // weeks: [
-    //   {
-    //     created: String,
-    //     created_by: Schema.Types.ObjectId,
-    //     status: {
-    //       type: String,
-    //       enum: ["AUCENSIA", "JUSTIFICADO", "ASISTE", "SIN_DATOS"],
-    //       default: "SIN_DATOS",
-    //     },
-    //     name: String,
-    //   },
-    // ],
-    // weeks: [
-    //   {
-    //     created: String,
-    //     created_by: Schema.Types.ObjectId,
-    //     data: [
-    //       {
-    //         status: {
-    //           type: String,
-    //           enum: ["AUCENSIA", "JUSTIFICADO", "ASISTE", "SIN_DATOS"],
-    //           default: "SIN_DATOS",
-    //         },
-    //         name: String,
-    //       },
-    //     ],
-    //   },
-    // ],
+    
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
-    toObject: { virtuals: true }, // So `console.log()` and other functions that use `toObject()` include virtuals
+    toJSON: { virtuals: true }, 
+    toObject: { virtuals: true }, 
   }
 );
 
-// evangelizeSchema.virtual("numOfComments").get(function () {
-//   return this.comments.length;
-// });
+evangelizeSchema.index({ name: 1, last_name: 1 }, { unique: true });
 
 export default mongoose.model("Evangelize", evangelizeSchema);

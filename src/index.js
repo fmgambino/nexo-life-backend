@@ -62,7 +62,7 @@ app.use((err, req, res, next) => {
 const swaggerOptions = {
   definition: openApiDoc,
 
-  apis: [`${__dirname}/routes/v1/authRoutes.js`],
+  apis: [`${__dirname}/routes/v1/*.js`],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);

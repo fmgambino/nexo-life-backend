@@ -3,40 +3,27 @@ import consolidationModel from "../models/consolidationModel.js";
 import createError from "../util/errors/createError.js";
 
 const create = async (req, res, next) => {
-  const { id, church } = req.user;
-  const { full_name, destination, invited_by, consolidator } = req.body;
+  const { ... all } = req.body;
 
-  //console.log(req.user);
+  const competitor = new evangelizeModel({... all });
+  try {
 
-  const newEvangelize = new evangelizeModel({
-    full_name,
-    responsible: id,
-    church,
-    destination,
-    invited_by,
-    consolidator,
-    weeks: weeks(weekOfTheMonth(), id),
-  });
-
-  newEvangelize
-    .save()
-    .then((evangelize) => {
-      // console.log("bien");
-      res.status(201).send({
-        status: true,
-        data: "Evangelization created successfully!",
-      });
-    })
-    .catch((err) => {
-      // console.log(err);
-      // console.log("mal");
-      if (err.code === 11000)
-        return next(
-          createError(406, "Already a evangelization with these data!")
-        );
-
-      return next(createError(406, err));
+    const savedCompetitor = await competitor.save();
+    
+    if (!savedCompetitor) {
+      return res.status(500).json({ status: false, message: 'Could not add' });
+    }
+    return res.status(201).send({
+      status: true,
+      message: "Added successfully",
     });
+    
+  } catch (error) {
+    if(error.message.includes("E11000")) {
+      return next(createError(406,  'User already exists!' ));
+    }
+    return next(createError(406,  error.message ));
+  }
 };
 
 const getAll = async (req, res, next) => {

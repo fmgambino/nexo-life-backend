@@ -452,27 +452,29 @@ paths:
         "404":
           $ref: "#/components/responses/IsNoRecord"
   /evangelization:
-    post:
-      tags:
-        - Evangelization
-      summary: Create Evangelization
-      security:
-        - bearerAuth: []
-      description: Create Evangelization.
-      operationId: createEvangelization
-      requestBody:
-        description: Created evangelization object
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ConsolidationAndEvangelizationPost"
-      responses:
-        200:
-          $ref: "#/components/responses/ok"
-        401:
-          $ref: "#/components/responses/UnauthorizedError"
-        406:
-          $ref: "#/components/responses/DuplicateData"
+    # post:
+    #   tags:
+    #     - Evangelization
+    #   summary: Create Evangelization
+    #   security:
+    #     - bearerAuth: []
+    #   description: Create Evangelization.
+    #   operationId: createEvangelization
+    #   requestBody:
+    #     description: Created evangelization object
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: "#/components/schemas/ConsolidationAndEvangelizationPost"
+    #   responses:
+    #     201:
+    #       $ref: "#/components/responses/ok"
+    #     401:
+    #       $ref: "#/components/responses/UnauthorizedError"
+    #     406:
+    #       $ref: "#/components/responses/DuplicateData"
+    #     500:
+    #       $ref: "#/components/responses/ServerError"
     get:
       tags:
         - Evangelization
@@ -1311,7 +1313,7 @@ components:
       bearerFormat: JWT
   responses:
     ok:
-      description: ok!
+      description: Record created successfully.
     UnauthorizedError:
       description: Not authorized!
     DuplicateData:
@@ -1320,3 +1322,5 @@ components:
       description: There is no record with that id!
     SuccessfullRemove:
       description: Church removed successfully!
+    ServerError:
+      description: Internal server error.

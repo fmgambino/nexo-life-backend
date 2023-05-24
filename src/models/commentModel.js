@@ -1,23 +1,26 @@
 import mongoose from "mongoose";
+
 const { Schema } = mongoose;
 
-const commentSchema = new Schema(
-  {
-    body: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    consolidation: {
-      type: Schema.Types.ObjectId,
-      ref: "Consolidation",
-    },
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
+const CommentSchema = new Schema({
+  body: {
+    type: String,
   },
-  { timestamps: true }
-);
+  created_by: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  status: {
+    type: String,
+    enum: [
+      "VISITADO",
+      "CONTACTO_TELEFONICO",
+      "NO_INFORMO",
+      "NO_CONSOLIDO",
+      "NO_RECIBIO",
+    ],
+    default: "NO_INFORMÓ",
+  },
+}, { timestamps: true });
 
-export default mongoose.model("Comment", commentSchema);
+export default mongoose.model("Comment", CommentSchema);
