@@ -295,6 +295,38 @@ const remove = async (req, res, next) => {
     });
 };
 
+const updateComment = async (req, res, next) => {
+  const { id, commentId } = req.params;
+  const { body, status } = req.body;
+
+  await consolidationModel
+    .findOneAndUpdate(
+      { _id: id, "comments._id": commentId },
+      {
+        $set: {
+          "comments.$.body": body,
+          "comments.$.status": status,
+        },
+      }
+    )
+    .then((consolidation) => {
+      if (consolidation !== null) {
+        res.status(200).send({
+          status: true,
+          data: "Comment updated successfully!",
+        });
+      } else {
+        return next(createError(404, "There is no record with that id or commentId!"));
+      }
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId")
+        return next(createError(404, "There is no record with that id or commentId!"));
+      return next(createError(406, err));
+    });
+};
+
+
 const createComent = async (req, res, next) => {
   const { id } = req.params;
   const { id: authUserId } = req.user;
@@ -491,6 +523,7 @@ export default {
   remove,
   createComent,
   removeComment,
+  updateComment,
   // createWeek,
   // updateWeek,
   // removeWeek,

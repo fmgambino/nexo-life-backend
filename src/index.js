@@ -48,7 +48,7 @@ app.use((req, res, next) => {
 app.use("/api/v1/auth", authRoutesV1);
 app.use("/api/v1/church", churchRoutesV1);
 app.use("/api/v1/consolidation", consolidationRoutesV1);
-app.use("/api/v1/consolidation", consolidationRoutesV1);
+// app.use("/api/v1/consolidation", consolidationRoutesV1);
 app.use("/api/v1/destination", destinationRoutesV1);
 app.use("/api/v1/comment-status", commentStatusRoutesV1);
 app.use("/api/v1/evangelization", evangelizationRoutesV1);

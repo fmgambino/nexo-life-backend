@@ -128,9 +128,6 @@ const authCreateUser = async (req, res, next) => {
   const { name, email, password, profile, rol, address, phone, church } =
     req.body;
 
-  // console.log(authRol, authChurch, req.user);
-  // console.log(`TEST: ${authRol} ${rol}`);
-
   if((["SuperAdministrator","Administrator"].includes(rol) && authRol === "Administrator") || (authRol === "SuperAdministrator" && rol === "Responsible")) {
     return next(
       createError(
@@ -166,68 +163,77 @@ const authCreateUser = async (req, res, next) => {
       return next(createError(406, err));
     });
 
-
-  // if (authRol === "SuperAdministrator" && rol === "SuperAdministrator") {
-  //   var newUser = new userModel({
-  //     name,
-  //     email,
-  //     password,
-  //     //church,
-  //     profile,
-  //     rol,
-  //     address,
-  //     phone,
-  //   });
-  // } else if (authRol === "SuperAdministrator" && rol === "Administrator") {
-  //   var newUser = new userModel({
-  //     name,
-  //     email,
-  //     password,
-  //     church,
-  //     profile,
-  //     rol,
-  //     address,
-  //     phone,
-  //   });
-  // } else if (
-  //   (authRol === "SuperAdministrator" && rol === "Responsible") ||
-  //   (authRol === "Administrator" && rol === "SuperAdministrator") ||
-  //   (authRol === "Administrator" && rol === "Administrator")
-  // ) {
-  //   return next(
-  //     createError(
-  //       401,
-  //       "You do not have permissions to create this type of users!"
-  //     )
-  //   );
-  // } else {
-  //   var newUser = new userModel({
-  //     name,
-  //     email,
-  //     password,
-  //     church: authChurch,
-  //     profile,
-  //     rol,
-  //     address,
-  //     phone,
-  //   });
-  // }
-
-  // await newUser
-  //   .save()
-  //   .then((user) => {
-  //     res.status(201).send({
-  //       status: true,
-  //       data: "User created successfully!",
-  //     });
-  //   })
-  //   .catch((err) => {
-  //     if (err.code === 11000)
-  //       return next(createError(406, "Already a user with these data!"));
-
-  //     return next(createError(406, err));
-  //   });
 };
+
+// const authCreateUserOld = async (req, res, next) => {
+//   const { rol: authRol } = req.user;
+//   const { name, email, password, profile, rol, address, phone, church } =
+//     req.body;
+
+
+
+//   if (authRol === "SuperAdministrator" && rol === "SuperAdministrator") {
+//     var newUser = new userModel({
+//       name,
+//       email,
+//       password,
+//       church,
+//       profile,
+//       rol,
+//       address,
+//       phone,
+  
+//     });
+//   } else if (authRol === "SuperAdministrator" && rol === "Administrator") {
+//     var newUser = new userModel({
+//       name,
+//       email,
+//       password,
+//       church,
+//       profile,
+//       rol,
+//       address,
+//       phone,
+//     });
+//   } else if (
+//     (authRol === "SuperAdministrator" && rol === "Responsible") ||
+//     (authRol === "Administrator" && rol === "SuperAdministrator") ||
+//     (authRol === "Administrator" && rol === "Administrator")
+//   ) {
+//     return next(
+//       createError(
+//         401,
+//         "You do not have permissions to create this type of users!"
+//       )
+//     );
+//   } else {
+//     var newUser = new userModel({
+//       name,
+//       email,
+//       password,
+//       church: authChurch,
+//       profile,
+//       rol,
+//       address,
+//       phone,
+//     });
+//   }
+
+//   await newUser
+//     .save()
+//     .then((user) => {
+//       res.status(201).send({
+//         status: true,
+//         data: "User created successfully!",
+//       });
+//     })
+//     .catch((err) => {
+//       if (err.code === 11000)
+//         return next(createError(406, "Already a user with these data!"));
+
+//       return next(createError(406, err));
+//     });
+// };
 
 const getAll = async (req, res, next) => {
   const { rol, church } = req.user;
