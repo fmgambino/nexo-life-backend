@@ -85,9 +85,21 @@ const evangelizeSchema = new Schema(
     },
     comments: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Comment",
-      }
+        body: String,
+        created: Date,
+        created_by: Schema.Types.ObjectId,
+        status: {
+          type: String,
+          enum: [
+            "VISITADO",
+            "CONTACTO_TELEFONICO",
+            "NO_INFORMO",
+            "NO_CONSOLIDO",
+            "NO_RECIBIO",
+          ],
+          default: "NO_INFORMO",
+        },
+      },
     ],
     
   },

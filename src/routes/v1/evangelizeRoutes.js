@@ -151,6 +151,58 @@ router.post(
     evangelizationController.update
   );
 
+  /**
+ * @swagger
+ * /evangelization/{id}/comments/{commentId}:
+ *   put:
+ *     summary: Update comment
+ *     tags: [Evangelization]
+ *     description: Update an existing comment based on its ID.
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the evangelization
+ *         example: 64741f6d434459353fdd1307
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: commentId
+ *         in: path
+ *         description: ID of the comment to update
+ *         required: true
+ *         example: 64741fe8434459353fdd130b
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               body:
+ *                 type: string
+ *                 description: The updated body of the comment
+ *                 example: Id dolor consequat amet nostrud in ad Lorem pariatur et non ut qui. 
+ *               status:
+ *                 type: string
+ *                 description: The updated status of the comment
+ *                 enum: ["VISITADO","CONTACTO_TELEFONICO","NO_INFORMO","NO_CONSOLIDO","NO_RECIBIO"]
+ *                 example: NO_CONSOLIDO
+ *     responses:
+ *       200:
+ *         description: Comment updated successfully
+ *       404:
+ *         description: Comment not found
+ *       500:
+ *         description: Internal server error
+ */
+  router.put(
+    "/:id/comments/:commentId",
+    authMiddleware.isAuthenticated,
+    authMiddleware.checkRole(["Administrator", "Responsible"]),
+    evangelizationController.updateComment
+  );
+
   router.put(
     "/:id/comment",
     //consolidationValidations.create,
