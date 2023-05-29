@@ -23,7 +23,7 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const openApiPath = 'X:/electronica-gambino/nexo-life-backend/openapi.yaml';
+const openApiPath = `${__dirname}/openapi.yaml`;
 const openApiDoc = YAML.load(openApiPath);
 
 dbConnect();
