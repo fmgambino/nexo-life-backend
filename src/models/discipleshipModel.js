@@ -9,15 +9,16 @@ const discipleshipSchema = new Schema(
       trim: true,
     },
     coordinator: {
-      type: String,
-      required: [true, 'Coordinator is required'],
-      trim: true,
-    },
-    discipler: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: [true, 'Discipler is required'],
+      required: [true, 'Coordinator is required'],
     },
+    discipler: {
+      type: String,
+      required: [true, 'discipler is required'],
+      trim: true,
+    },
+    
     dd: {
       type: Number,
       default: 0,
