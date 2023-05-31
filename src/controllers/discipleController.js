@@ -1,6 +1,103 @@
 import DirectDisciple from '../models/discipleModel.js';
 import createError from "./../util/errors/createError.js";
 
+
+const removeWeek = async (req, res, next) => {
+  try {
+    const { directDiscipleId, networkDiscipleId, weekId } = req.params;
+
+    const directDisciple = await DirectDisciple.findById(directDiscipleId);
+
+    if (!directDisciple) {
+      return res.status(404).json({ message: 'Direct disciple not found' });
+    }
+
+    const networkDisciple = directDisciple.network_disciples.id(networkDiscipleId);
+
+    if (!networkDisciple) {
+      return res.status(404).json({ message: 'Network disciple not found' });
+    }
+
+    const week = networkDisciple.weeks.id(weekId);
+
+    if (!week) {
+      return res.status(404).json({ message: 'Week not found' });
+    }
+
+    week.remove();
+
+    await directDisciple.save();
+
+    res.status(200).json({ message: 'Week removed successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+};
+
+
+const addWeek = async (req, res, next) => {
+
+  try {
+    const directDiscipleId = req.params.directDiscipleId;
+    const networkDiscipleId = req.params.networkDiscipleId;
+    const weekData = req.body;
+
+    const directDisciple = await DirectDisciple.findById(directDiscipleId);
+    if (!directDisciple) {
+      return res.status(404).json({ message: 'Direct Disciple not found' });
+    }
+
+    const networkDisciple = directDisciple.network_disciples.find(
+      (disciple) => disciple._id.toString() === networkDiscipleId
+    );
+    if (!networkDisciple) {
+      return res.status(404).json({ message: 'Network Disciple not found' });
+    }
+
+    const newWeek = {
+      presente: weekData.presente,
+      fecha: weekData.fecha,
+      donaciones: weekData.donaciones,
+      observaciones: weekData.observaciones
+    };
+
+    networkDisciple.weeks.push(newWeek);
+
+    await directDisciple.save();
+
+    res.status(200).json({ message: 'Week added successfully', networkDisciple });
+  } catch (error) {
+    res.status(500).json({ message: `Failed to add week to Network Disciple: ${error.message}` });
+  }
+
+
+}
+
+
+const addDR = async (req, res, next) => {
+  try {
+    const directDiscipleId = req.params.id;
+    const {name} = req.body;
+
+    const directDisciple = await DirectDisciple.findByIdAndUpdate(
+      directDiscipleId,
+      { $push: { network_disciples: { name } } },
+      { new: true, useFindAndModify: false }
+    );
+
+    if (!directDisciple) {
+      return res.status(404).json({ message: 'DirectDisciple not found' });
+    }
+
+    res.status(200).json({ status: true, directDisciple });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
 const create = async (req, res, next) => {
   try {
     const { ... all } = req.body;
@@ -81,4 +178,7 @@ export default {
   getById,
   remove,
   update,
+  addDR,
+  addWeek,
+  removeWeek
 };

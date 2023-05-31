@@ -30,7 +30,11 @@ const NetworkDiscipleSchema = new Schema({
     type: String,
     required: [true, 'It is required to indicate the name of the network disciple'],
   },
-  weeks: [WeekSchema]
+  weeks: {
+    type: [WeekSchema],
+    default: [],
+  },
+
 },
 {
     timestamps: true,
@@ -72,8 +76,10 @@ const DirectDiscipleSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-    network_disciples: [NetworkDiscipleSchema],
-    default: [],
+    network_disciples: {
+      type: [NetworkDiscipleSchema],
+      default: [],
+    },
 },
 {
     timestamps: true,
