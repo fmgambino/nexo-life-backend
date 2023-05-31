@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const discipleshipSchema = new Schema(
+const LeaderSchema = new Schema(
   {
     name: {
       type: String,
@@ -54,6 +54,6 @@ const discipleshipSchema = new Schema(
   }
 );
 
-discipleshipSchema.index({ name: 1, coordinator: 1, discipler: 1 }, { unique: true });
+LeaderSchema.index({ name: 1, coordinator: 1, discipler: 1 }, { unique: true });
 
-export default mongoose.model("Discipleship", discipleshipSchema);
+export default mongoose.model("Leader", LeaderSchema);

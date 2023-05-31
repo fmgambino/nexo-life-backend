@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const WeekSchema = new mongoose.Schema({
-  user: {
+const AttendanceSchema = new mongoose.Schema({
+  lider: {
     type: Schema.Types.ObjectId,
     ref: 'Discipleship',
     required: [true, 'ID is required'],
@@ -33,4 +33,4 @@ const WeekSchema = new mongoose.Schema({
   }
 );
 
-export default mongoose.model("WeekSchema", WeekSchema);
+export default mongoose.model("AttendanceSchema", AttendanceSchema);

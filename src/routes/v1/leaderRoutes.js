@@ -2,9 +2,9 @@
 
 import { Router } from "express";
 
-import discipleshipController from "../../controllers/discipleshipController.js";
+import leaderController from "../../controllers/leaderController.js";
 import authMiddleware from "../../middleware/jwt.js";
-import { dataEntry, remove } from "../../util/validations/discipleshipValidations.js";
+import { dataEntry, remove } from "../../util/validations/leaderValidations.js";
 
 
 
@@ -16,14 +16,14 @@ const router = Router();
 /**
  * @swagger
  * tags:
- *   name: Discipleship
- *   description: Discipleship management endpoints
+ *   name: Leader
+ *   description: Leader management endpoints
  */
 
 /**
  * @swagger
  * definitions:
- *   DiscipleshipInput:
+ *   LeaderInput:
  *     type: object
  *     properties:
  *       name:
@@ -58,15 +58,15 @@ const router = Router();
  *         type: string
  *         example: Granaderos 831, B2804 Campana, Provincia de Buenos Aires
  *
- *   DiscipleshipOutput:
+ *   LeaderOutput:
  *     type: object
  *     properties:
  *       status:
  *         type: boolean
- *       discipleship:
- *         $ref: '#/definitions/Discipleship'
+ *       leader:
+ *         $ref: '#/definitions/Leader'
  *
- *   Discipleship:
+ *   Leader:
  *     type: object
  *     properties:
  *       name:
@@ -113,11 +113,11 @@ const router = Router();
 
 /**
  * @swagger
- * /discipleship:
+ * /leader:
  *   post:
- *     summary: Create a discipleship
- *     tags: [Discipleship]
- *     description: Creates a new discipleship.
+ *     summary: Create a leader
+ *     tags: [Leader]
+ *     description: Creates a new leader.
  *     security:
  *       - Authorization: []
  *     requestBody:
@@ -125,14 +125,14 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/definitions/DiscipleshipInput'
+ *             $ref: '#/definitions/LeaderInput'
  *     responses:
  *       200:
- *         description: Discipleship created successfully.
+ *         description: Leader created successfully.
 *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/DiscipleshipOutput'
+ *               $ref: '#/definitions/LeaderOutput'
  *       400:
  *         description: Invalid request body.
  *         content:
@@ -162,16 +162,16 @@ router.post(
   '/',
   dataEntry,
   authMiddleware.isAuthenticated,
-  discipleshipController.create
+  leaderController.create
 );
 
 /**
  * @swagger
- * /discipleship/{id}:
+ * /leader/{id}:
  *   put:
- *     summary: Update a discipleship
- *     tags: [Discipleship]
- *     description: Updates an existing discipleship.
+ *     summary: Update a leader
+ *     tags: [Leader]
+ *     description: Updates an existing leader.
  *     security:
  *       - Authorization: []
  *     parameters:
@@ -180,20 +180,20 @@ router.post(
  *         schema:
  *           type: string
  *         required: true
- *         description: ID of the discipleship to update.
+ *         description: ID of the leader to update.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/definitions/DiscipleshipInput'
+ *             $ref: '#/definitions/LeaderInput'
  *     responses:
  *       200:
- *         description: Discipleship updated successfully.
+ *         description: Leader updated successfully.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/DiscipleshipOutput'
+ *               $ref: '#/definitions/LeaderOutput'
  *       400:
  *         description: Invalid request body.
  *         content:
@@ -223,17 +223,17 @@ router.put(
   '/:id',
   dataEntry,
   authMiddleware.isAuthenticated,
-  discipleshipController.update
+  leaderController.update
 );
 
 
 /**
  * @swagger
- * /discipleship/{id}:
+ * /leader/{id}:
  *   get:
- *     summary: Get a discipleship by ID
- *     tags: [Discipleship]
- *     description: Retrieves a discipleship by its ID.
+ *     summary: Get a leader by ID
+ *     tags: [Leader]
+ *     description: Retrieves a leader by its ID.
  *     security:
  *       - Authorization: []
  *     parameters:
@@ -242,14 +242,14 @@ router.put(
  *         schema:
  *           type: string
  *         required: true
- *         description: ID of the discipleship to retrieve.
+ *         description: ID of the leader to retrieve.
  *     responses:
  *       200:
- *         description: Discipleship retrieved successfully.
+ *         description: Leader retrieved successfully.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/DiscipleshipOutput'
+ *               $ref: '#/definitions/LeaderOutput'
  *       400:
  *         description: Invalid request parameters.
  *         content:
@@ -275,7 +275,7 @@ router.put(
  *                 message:
  *                   type: string
  *       404:
- *         description: Discipleship not found.
+ *         description: Leader not found.
  *         content:
  *           application/json:
  *             schema:
@@ -291,21 +291,21 @@ router.get(
   '/:id',
   remove,
   authMiddleware.isAuthenticated,
-  discipleshipController.getById
+  leaderController.getById
 );
 
 /**
  * @swagger
- * /discipleship:
+ * /leader:
  *   get:
- *     summary: Get all discipleships
- *     tags: [Discipleship]
- *     description: Retrieves all discipleships.
+ *     summary: Get all leaders
+ *     tags: [Leader]
+ *     description: Retrieves all leaders.
  *     security:
  *       - Authorization: []
  *     responses:
  *       200:
- *         description: Discipleships retrieved successfully.
+ *         description: Leaders retrieved successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -316,7 +316,7 @@ router.get(
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/definitions/DiscipleshipOutput'
+ *                     $ref: '#/definitions/LeaderOutput'
  *       401:
  *         description: Unauthorized. Authentication token is missing or invalid.
  *         content:
@@ -333,17 +333,17 @@ router.get(
 router.get(
   '/',
   authMiddleware.isAuthenticated,
-  discipleshipController.getAll
+  leaderController.getAll
 );
 
 
 /**
  * @swagger
- * /discipleship/{id}:
+ * /leader/{id}:
  *   delete:
- *     summary: Delete a discipleship
- *     tags: [Discipleship]
- *     description: Deletes a discipleship by its ID.
+ *     summary: Delete a leader
+ *     tags: [Leader]
+ *     description: Deletes a leader by its ID.
  *     security:
  *       - Authorization: []
  *     parameters:
@@ -352,10 +352,10 @@ router.get(
  *         schema:
  *           type: string
  *         required: true
- *         description: ID of the discipleship to delete.
+ *         description: ID of the leader to delete.
  *     responses:
  *       200:
- *         description: Discipleship deleted successfully.
+ *         description: Leader deleted successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -366,7 +366,7 @@ router.get(
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Discipleship Item Removed Successfully
+ *                   example: Leader Item Removed Successfully
  *       400:
  *         description: Invalid request parameters.
  *         content:
@@ -396,7 +396,7 @@ router.delete(
   '/:id',
    remove,
   authMiddleware.isAuthenticated,
-  discipleshipController.remove
+  leaderController.remove
 );
 
 

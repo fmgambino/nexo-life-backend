@@ -15,7 +15,8 @@ import evangelizationRoutesV1 from "./routes/v1/evangelizeRoutes.js";
 import commentRoutesV1 from "./routes/v1/commentRoutes.js";
 import destinationRoutesV1 from "./routes/v1/destinationRoutes.js";
 import commentStatusRoutesV1 from "./routes/v1/commentStatusRoutes.js";
-import discipleshipRoutesV1 from "./routes/v1/discipleshipRoutes.js";
+import leaderRoutesV1 from "./routes/v1/leaderRoutes.js";
+import discipleRoutesV1 from "./routes/v1/discipleRoutes.js";
 
 
 import { fileURLToPath } from 'url';
@@ -49,7 +50,8 @@ app.use((req, res, next) => {
 app.use("/api/v1/auth", authRoutesV1);
 app.use("/api/v1/church", churchRoutesV1);
 app.use("/api/v1/consolidation", consolidationRoutesV1);
-app.use("/api/v1/discipleship", discipleshipRoutesV1);
+app.use("/api/v1/leader", leaderRoutesV1);
+app.use("/api/v1/disciple", discipleRoutesV1);
 app.use("/api/v1/destination", destinationRoutesV1);
 app.use("/api/v1/comment-status", commentStatusRoutesV1);
 app.use("/api/v1/evangelization", evangelizationRoutesV1);
