@@ -40,7 +40,7 @@ const isAuthenticated = (req, res, next) => {
 // };
 
 export const checkRole = (roles) => async (req, res, next) => {
-  //console.log(roles);
+  console.log(roles);
   if ([].concat(roles).includes(req.user.rol)) {
     next();
   } else {

@@ -28,8 +28,8 @@ import authMiddleware from "../../middleware/jwt.js";
  *                   default: true
  *                 data:
  *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Destination'
+ *                   
+ *                     
  *             example:
  *               status: true
  *               data:
