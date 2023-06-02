@@ -69,7 +69,7 @@ const requestPasswordChange = async (req, res, next) => {
 
     const mailOptions = {
       from: process.env.SMTP_USER,
-      to: 'chiuchiolo30@gmail.com',
+      to: email,
       subject: 'Nexo life - password change request',
       html: emailTemplate,
     };
