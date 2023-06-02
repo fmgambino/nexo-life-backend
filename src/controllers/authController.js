@@ -1,10 +1,24 @@
 import bcrypt from "bcrypt";
+const fs = require('fs');
 
 import userModel from "../models/userModel.js";
 import createError from "./../util/errors/createError.js";
 import generateJwt from "./../util/generators/generateJwt.js";
 
 import nodemailer  from 'nodemailer';
+
+const readTemplateFile = (filePath) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (error, data) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
+
 
 const updatePassword = async (req, res, next) => {
 
