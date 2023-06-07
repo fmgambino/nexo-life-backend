@@ -1,12 +1,13 @@
 import Infocollector from "../models/infocollectorModel.js";
+import Evangelize from "../models/evangelizeModel.js";
 import createError from "./../util/errors/createError.js";
 
 
 const getAll = async (req, res) => {
     try {
-        const infocollector = await Infocollector.find();
+        const infocollectors = await Infocollector.find();
     
-        res.status(200).json({ status: true, infocollector });
+        res.status(200).json({ status: true, infocollectors });
     } catch (error) {
         next(createError(500, "Failed to retrieve Infocollector object"));
     }
@@ -14,11 +15,17 @@ const getAll = async (req, res) => {
 
 const create = async (req, res) => {
 
-  const { ... resto } = req.user;
-  console.log(resto); return;
+  const { profile } = req.user;
+
     try {
-        const { ... all } = req.body;
-        const infocollector = await Infocollector.create({ ... all});
+        let data;
+        if (profile === "Administrator") {
+            data = req.body;
+        } else {
+          const {otherInputs, inputSelect, ...resto } = req.body;
+          data = resto;
+        }
+        const infocollector = await Infocollector.create({ ... data});
     
         res.status(201).json({ status: true, infocollector });
     } catch (error) {
@@ -37,25 +44,66 @@ const getById = async (req, res, next) => {
   
       res.status(200).json({ status: true, infocollector });
     } catch (error) {
-      next(createError(500, "Failed to retrieve infocollector object"));
+      const { status,  message } = error;
+      next(createError(status, message));
     }
   };
 
-  const update = async (req, res, next) => {
+  const updateDestination = async (req, res, next) => {
+    let changed = false;
     try {
       const { id } = req.params;
-      const updatedData = req.body;
-  
+      const { destination } = req.body;
+
+      const infocollector = await Infocollector.findById(id);
+
+      if (!infocollector) {
+        throw createError(404, "Infocollector not found");
+      }
+      if (infocollector.destination === "EVANGELIZAR") {
+        throw createError(403, "Cannot update an Infocollector with destination 'EVANGELIZAR'");
+      }
+      
       const updatedInfocollector = await Infocollector.findByIdAndUpdate(
         id,
-        updatedData,
+        {destination: destination},
         { new: true }
       );
+
+      if (!updatedInfocollector) {
+        throw createError(404, "Infocollector not found");
+      }
+
+      if (destination === "EVANGELIZAR") {
+        const { 
+          name,
+          last_name,
+          age,
+          family_status,
+          address,
+          location,
+          phone,
+          another_church,
+          to_be_visited,
+          responsible,
+          church,
+          invited_by,
+          coordinador,
+         } = updatedInfocollector;
+        
+
+        const evangelize = await Evangelize.create({ name, last_name, age, family_status, address, location, phone, another_church, to_be_visited, responsible, church, invited_by, consolidator: coordinador });
+        const res = await evangelize.save();
+        if (res) {
+          changed = true;
+        }
+      }
   
-      res.status(200).json({ status: true, week: updatedInfocollector });
+      res.status(200).json({ status: true, infocollector: updatedInfocollector, changed });
     } catch (error) {
       console.log(error);
-      next(createError(500, "Failed to update updatedInfocollector object"));
+      const { status,  message } = error;
+      next(createError(status, message));
     }
   };
 
@@ -63,18 +111,51 @@ const getById = async (req, res, next) => {
     try {
       const { id } = req.params;
   
-      await Infocollector.findByIdAndRemove(id);
+      const infocollector = await Infocollector.findById(id);
+      if (!infocollector) {
+        throw createError(404, "Infocollector not found");
+      }
+      if (infocollector.destination === "EVANGELIZAR") {
+        throw createError(403, "Cannot delete an Infocollector with destination 'EVANGELIZAR'");
+      }
   
-      res.status(200).json({status: true, message: "Infocollector Item Removed Successfully" });
+      const item = await Infocollector.findByIdAndRemove(id);
+  
+      res.status(200).json({ status: true, item });
     } catch (error) {
-      next(createError(500, "Failed to delete Infocollector item"));
+      const { status,  message } = error;
+      next(createError(status, message));
     }
   };
+  
+  const update = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const updatedInfocollector = req.body;
+  
+      const infocollector = await Infocollector.findById(id);
+      if (!infocollector) {
+        throw createError(404, "Infocollector not found");
+      }
+      if (infocollector.destination === "EVANGELIZAR") {
+        throw createError(403, "Cannot update an Infocollector with destination 'EVANGELIZAR'");
+      }
+  
+      const updatedItem = await Infocollector.findByIdAndUpdate(id, updatedInfocollector, { new: true });
+  
+      res.status(200).json({ status: true, item: updatedItem });
+    } catch (error) {
+      const { status, message } = error;
+      next(createError(status, message));
+    }
+  };
+  
 
   export default {
     create,
     getAll,
     getById,
     remove,
+    updateDestination,
     update,
   };
