@@ -1,10 +1,26 @@
 import bcrypt from "bcrypt";
+import fs from "fs";
+import path from "path";
 
 import userModel from "../models/userModel.js";
 import createError from "./../util/errors/createError.js";
 import generateJwt from "./../util/generators/generateJwt.js";
 
 import nodemailer  from 'nodemailer';
+
+const readTemplateFile = (fileName) => {
+  return new Promise((resolve, reject) => {
+    const filePath = path.join(__dirname, fileName);
+    fs.readFile(filePath, 'utf8', (error, data) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
+
 
 const updatePassword = async (req, res, next) => {
 
@@ -36,7 +52,7 @@ const updatePassword = async (req, res, next) => {
 
 const requestPasswordChange = async (req, res, next) => {
 
-  const { email } = req.body;
+  const { email, name, activate, url } = req.body;
 
   if (!email) {
     return next(createError(422, `Email name can not be empty!`));
@@ -57,19 +73,22 @@ const requestPasswordChange = async (req, res, next) => {
           pass: process.env.SMTP_PASSWORD,
         },
     });
+    
+    const templateFileName = activate ? 'activate.html' : 'forgot.html';
+    const emailTemplate = await readTemplateFile(templateFileName);
 
-    const emailTemplate = `
-    <html>
-    <body>
-      <h1>Hi!</h1>
-      <p>To change your password click on the following link</p>
-    </body>
-    </html>
-    `;
+//     const emailTemplate = `
+//     <html>
+//     <body>
+//       <h1>Hi!</h1>
+//       <p>To change your password click on the following link</p>
+//     </body>
+//     </html>
+//     `;
 
     const mailOptions = {
       from: process.env.SMTP_USER,
-      to: 'chiuchiolo30@gmail.com',
+      to: email,
       subject: 'Nexo life - password change request',
       html: emailTemplate,
     };
