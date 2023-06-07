@@ -1,4 +1,4 @@
-import WeekModel from "../models/weekModel_new";
+import WeekModel from "../models/weekModel_new.js";
 import createError from "./../util/errors/createError.js";
 
 const create = async (req, res, next) => {

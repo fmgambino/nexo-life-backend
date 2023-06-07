@@ -1,11 +1,12 @@
 import jwt from "jsonwebtoken";
 
-const generateAccessToken = (id, rol, church) => {
+const generateAccessToken = (id, rol, church, profile) => {
   return jwt.sign(
     {
       id,
       rol,
       church,
+      profile,
     },
     process.env.JWT_ACCESS_SECRET,
     {

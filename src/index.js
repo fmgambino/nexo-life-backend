@@ -17,6 +17,7 @@ import destinationRoutesV1 from "./routes/v1/destinationRoutes.js";
 import commentStatusRoutesV1 from "./routes/v1/commentStatusRoutes.js";
 import leaderRoutesV1 from "./routes/v1/leaderRoutes.js";
 import discipleRoutesV1 from "./routes/v1/discipleRoutes.js";
+import infocollectorRoutesV1 from "./routes/v1/infocollectorRoutes.js";
 
 
 import { fileURLToPath } from 'url';
@@ -56,6 +57,7 @@ app.use("/api/v1/destination", destinationRoutesV1);
 app.use("/api/v1/comment-status", commentStatusRoutesV1);
 app.use("/api/v1/evangelization", evangelizationRoutesV1);
 app.use("/api/v1/comment", commentRoutesV1);
+app.use("/api/v1/infocollector", infocollectorRoutesV1);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

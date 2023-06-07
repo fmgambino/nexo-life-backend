@@ -1,7 +1,43 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const evangelizeSchema = new Schema(
+
+const OtherInputSchema = new Schema({
+  name: {
+    type: String,
+    required: [true, 'It is required to indicate the name of the input'],
+  },
+  value: {
+    type: String || Number,
+    required: [true, 'It is required to indicate the value of the input'],
+  },
+
+},
+{
+    timestamps: true,
+    toJSON: { virtuals: true }, 
+    toObject: { virtuals: true }, 
+  }
+);
+const InputSelectSchema = new Schema({
+  name: {
+    type: String,
+    required: [true, 'It is required to indicate the name of the input'],
+  },
+  value: {
+    type: [String || Number],
+    required: [true, 'It is required to indicate the value of the input'],
+  },
+
+},
+{
+    timestamps: true,
+    toJSON: { virtuals: true }, 
+    toObject: { virtuals: true }, 
+  }
+);
+
+const InfocollectorSchema = new Schema(
   {
     name: {
       type: String,
@@ -21,6 +57,10 @@ const evangelizeSchema = new Schema(
       type: String,
       enum: ["CASADO", "SOLTERO"],
       default: "SOLTERO",
+      trim: true,
+    },
+    prayer_request: {
+      type: String,
       trim: true,
     },
     address: {
@@ -45,12 +85,13 @@ const evangelizeSchema = new Schema(
     another_church: {
       type: Boolean,
       default: false,
-      required: [true, 'Field is required'],
     },
     to_be_visited: {
       type: Boolean,
       default: true,
-      required: [true, 'Field is required'],
+    },
+    line: {
+      type: String,
     },
     responsible: {
       type: Schema.Types.ObjectId,
@@ -65,43 +106,36 @@ const evangelizeSchema = new Schema(
     destination: {
       type: String,
       enum: [
-        "CONSOLIDADO",
-        "EN_ORACIÓN",
-        "EN_PROCESO",
-        "OTRA_IGLESIA",
-        "VISITA",
+        "EVANGELIZAR",
+        "POR_DEFINIR",
+        "DE_BAJA",
       ],
-      default: "EN_PROCESO",
+      default: "POR_DEFINIR",
     },
     invited_by: {
       type: String,
       required: true,
       trim: true,
     },
-    consolidator: {
+    coordinador: {
       type: String,
-      required: true,
       trim: true,
     },
-    comments: [
-      {
-        body: String,
-        created: Date,
-        created_by: Schema.Types.ObjectId,
-        status: {
-          type: String,
-          enum: [
-            "VISITADO",
-            "CONTACTO_TELEFONICO",
-            "NO_INFORMO",
-            "NO_CONSOLIDO",
-            "NO_RECIBIO",
-          ],
-          default: "NO_INFORMO",
-        },
-      },
-    ],
-    
+    double: {
+      type: String,
+      trim: true,
+    },
+    dataGral: {
+      type: String,
+    },
+    otherInputs: {
+      type :[OtherInputSchema],
+      default: []
+   },
+    inputSelect: {
+      type :[InputSelectSchema],
+    default: []
+   }
   },
   {
     timestamps: true,
@@ -110,4 +144,4 @@ const evangelizeSchema = new Schema(
   }
 );
 
-export default mongoose.model("Evangelize", evangelizeSchema);
+export default mongoose.model("Infocollector", InfocollectorSchema);

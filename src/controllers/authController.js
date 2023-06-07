@@ -108,7 +108,8 @@ const authUser = async (req, res, next) => {
       const token = generateJwt.generateAccessToken(
         otherData?._id,
         otherData?.rol,
-        otherData?.church
+        otherData?.church,
+        otherData?.profile
       );
 
       res.status(200).send({
